@@ -9,40 +9,40 @@ import re
 import time
 
 # Profanity list (can be extended)
-PROFANITY_LIST = [idiot, dumb, stupid, loser, shut up, worthless]
+PROFANITY_LIST = ["idiot", "dumb", "stupid", "loser", "shut up", "worthless"]
 
 # Initialize session state for spam detection and alerts
-if 'message_history' not in st.session_state
+if 'message_history' not in st.session_state:
     st.session_state.message_history = []
-if 'user_violations' not in st.session_state
+if 'user_violations' not in st.session_state:
     st.session_state.user_violations = 0
-if 'user_blocked' not in st.session_state
+if 'user_blocked' not in st.session_state:
     st.session_state.user_blocked = False
 
 # Load or train model components
 @st.cache_resource
-def load_model()
+def load_model():
     # Expanded training sample data
     data = {
-        text [
-            You're such a loser, no one likes you., Why don't you just disappear,
-            Get lost, you're worthless., You're an idiot and everyone hates you.,
-            Nobody wants you here., You’re so annoying, just stop talking.,
-            Watch your back tomorrow., I'll find you and deal with you.,
-            You better be careful after class., I'm warning you for the last time.,
-            Great job on your project!, See you at the library later.,
-            Thanks for your help today., You did amazing in the presentation!,
-            Let’s meet to finish the group task., You're a kind person.,
-            That was a very helpful session., Looking forward to our next class.,
-            Can you please help me with the assignment, Have a great weekend!
+        "text": [
+            "You're such a loser, no one likes you.", "Why don't you just disappear?",
+            "Get lost, you're worthless.", "You're an idiot and everyone hates you.",
+            "Nobody wants you here.", "You're so annoying, just stop talking.",
+            "Watch your back tomorrow.", "I'll find you and deal with you.",
+            "You better be careful after class.", "I'm warning you for the last time.",
+            "Great job on your project!", "See you at the library later.",
+            "Thanks for your help today.", "You did amazing in the presentation!",
+            "Let's meet to finish the group task.", "You're a kind person.",
+            "That was a very helpful session.", "Looking forward to our next class.",
+            "Can you please help me with the assignment?", "Have a great weekend!"
         ],
-        label [
-            cyberbullying, cyberbullying, cyberbullying,
-            cyberbullying, cyberbullying, cyberbullying,
-            threat, threat, threat, threat,
-            neutral, neutral, neutral, neutral,
-            neutral, neutral, neutral, neutral,
-            neutral, neutral
+        "label": [
+            "cyberbullying", "cyberbullying", "cyberbullying",
+            "cyberbullying", "cyberbullying", "cyberbullying",
+            "threat", "threat", "threat", "threat",
+            "neutral", "neutral", "neutral", "neutral",
+            "neutral", "neutral", "neutral", "neutral",
+            "neutral", "neutral"
         ]
     }
     df = pd.DataFrame(data)
