@@ -80,7 +80,8 @@ user_role = st.selectbox("Select your role", [Student, Admin])
 user_input = st.text_area("Enter chat message")
 
 # Show badge for violations
-st.markdown(f###  Violations Count `{st.session_state.user_violations}`)
+st.markdown(f"###  Violations Count: `{st.session_state.user_violations}`")
+
 
 # Auto-block if violations exceed limit
 if st.session_state.user_violations = 3
