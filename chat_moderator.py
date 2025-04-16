@@ -102,7 +102,7 @@ if st.button(Analyze Message) and user_input and not st.session_state.user_block
     if violation_detected
         st.session_state.user_violations += 1
 
-    st.subheader(🔍 Analysis Result)
+    st.subheader( Analysis Result)
     st.write(fDetected Category `{prediction}`)
     st.write(fConfidence `{confidence.2f}`)
     st.write(fSentiment Analysis `{sentiment_label}`)
