@@ -74,12 +74,12 @@ user_role = st.selectbox(Select your role, [Student, Admin])
 user_input = st.text_area(Enter chat message)
 
 # Show badge for violations
-st.markdown(f### 🚨 Violations Count `{st.session_state.user_violations}`)
+st.markdown(f###  Violations Count `{st.session_state.user_violations}`)
 
 # Auto-block if violations exceed limit
 if st.session_state.user_violations = 3
     st.session_state.user_blocked = True
-    st.error(🚫 You have been temporarily blocked due to repeated violations.)
+    st.error(You have been temporarily blocked due to repeated violations.)
 
 if st.button(Analyze Message) and user_input and not st.session_state.user_blocked
     vect_input = vectorizer.transform([user_input])
@@ -107,11 +107,11 @@ if st.button(Analyze Message) and user_input and not st.session_state.user_block
     st.write(fConfidence `{confidence.2f}`)
     st.write(fSentiment Analysis `{sentiment_label}`)
     if profanity_flag
-        st.warning(⚠️ Profanity Detected in this message.)
+        st.warning(Profanity Detected in this message.)
     if spam_flag
-        st.warning(⚠️ This message may be spam or repeated excessively.)
+        st.warning( This message may be spam or repeated excessively.)
     if st.session_state.user_violations = 3
-        st.error(🚨 Alert This user has been flagged 3 times for policy violations and is now blocked.)
+        st.error( Alert This user has been flagged 3 times for policy violations and is now blocked.)
 
     if user_role == Admin
         st.success(This message has been logged for admin review.)
@@ -132,6 +132,6 @@ if st.button(Analyze Message) and user_input and not st.session_state.user_block
         st.dataframe(log_entry)
     else
         if violation_detected
-            st.warning(⚠️ Please revise your message to follow community guidelines.)
+            st.warning( Please revise your message to follow community guidelines.)
         else
-            st.success(✅ Message is likely safe.)
+            st.success( Message is likely safe.)
