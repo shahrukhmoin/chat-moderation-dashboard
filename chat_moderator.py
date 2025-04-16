@@ -22,7 +22,6 @@ if 'user_blocked' not in st.session_state:
 # Load or train model components
 @st.cache_resource
 def load_model():
-    # Expanded training sample data
     data = {
         "text": [
             "You're such a loser, no one likes you.", "Why don't you just disappear?",
@@ -52,12 +51,10 @@ def load_model():
     model = MultinomialNB()
     model.fit(X, y)
     return model, vectorizer
-  
 
 def contains_profanity(text):
     text_lower = text.lower()
     return any(bad_word in text_lower for bad_word in PROFANITY_LIST)
-
 
 def is_spam(text):
     current_time = time.time()
@@ -69,76 +66,79 @@ def is_spam(text):
     st.session_state.message_history.append({"text": text, "time": current_time})
     return recent_count >= 2
 
-
 model, vectorizer = load_model()
 
 # GUI
-st.title( "AI Chat Moderator for Schools")
+st.title("AI Chat Moderator for Schools")
 st.write("Detect cyberbullying, threats, profanity, spam, and sentiment in real-time student chat")
 
-user_role = st.selectbox("Select your role", [Student, Admin])
+user_role = st.selectbox("Select your role", ["Student", "Admin"])
 user_input = st.text_area("Enter chat message")
 
-# Show badge for violations
-st.markdown(f"###  Violations Count: `{st.session_state.user_violations}`")
-
+st.markdown(f"### Violations Count: `{st.session_state.user_violations}`")
 
 # Auto-block if violations exceed limit
-if st.session_state.user_violations == 3:
+if st.session_state.user_violations >= 3:
     st.session_state.user_blocked = True
     st.error("You have been temporarily blocked due to repeated violations.")
 
-if st.button(Analyze Message) and user_input and not st.session_state.user_blocked
+if st.button("Analyze Message") and user_input and not st.session_state.user_blocked:
     vect_input = vectorizer.transform([user_input])
     proba = model.predict_proba(vect_input)[0]
     confidence = max(proba)
     prediction = model.predict(vect_input)[0]
 
     sentiment = TextBlob(user_input).sentiment.polarity
-    sentiment_label = Positive if sentiment  0 else (Negative if sentiment  0 else Neutral)
+    if sentiment > 0:
+        sentiment_label = "Positive"
+    elif sentiment < 0:
+        sentiment_label = "Negative"
+    else:
+        sentiment_label = "Neutral"
 
     profanity_flag = contains_profanity(user_input)
     spam_flag = is_spam(user_input)
 
     violation_detected = False
-    if prediction in [cyberbullying, threat] and confidence = 0.6
+    if prediction in ["cyberbullying", "threat"] and confidence >= 0.6:
         violation_detected = True
-    if profanity_flag or spam_flag
+    if profanity_flag or spam_flag:
         violation_detected = True
 
-    if violation_detected
+    if violation_detected:
         st.session_state.user_violations += 1
 
-    st.subheader( Analysis Result)
-    st.write(fDetected Category `{prediction}`)
+    st.subheader("Analysis Result")
+    st.write(f"Detected Category: `{prediction}`")
     st.write(f"Confidence: {confidence:.2f}")
-    st.write(fSentiment Analysis `{sentiment_label}`)
-    if profanity_flag
-        st.warning(Profanity Detected in this message.)
-    if spam_flag
-        st.warning( This message may be spam or repeated excessively.)
-    if st.session_state.user_violations = 3
-        st.error( Alert This user has been flagged 3 times for policy violations and is now blocked.)
+    st.write(f"Sentiment Analysis: `{sentiment_label}`")
 
-    if user_role == Admin
-        st.success(This message has been logged for admin review.)
-        log_entry = pd.DataFrame({
-            Message [user_input],
-            Category [prediction],
-            Sentiment [sentiment_label],
-            Profanity [Yes if profanity_flag else No],
-            Spam [Yes if spam_flag else No],
-            Violations [st.session_state.user_violations]
-        })
+    if profanity_flag:
+        st.warning("⚠️ Profanity Detected in this message.")
+    if spam_flag:
+        st.warning("⚠️ This message may be spam or repeated excessively.")
+    if st.session_state.user_violations >= 3:
+        st.error("🚫 Alert: This user has been flagged 3 times for policy violations and is now blocked.")
 
-        if os.path.exists(chat_logs.csv)
-            log_entry.to_csv(chat_logs.csv, mode='a', header=False, index=False)
-        else
-            log_entry.to_csv(chat_logs.csv, index=False)
+    if user_role == "Admin":
+        st.success("✅ This message has been logged for admin review.")
+        log_entry = pd.DataFrame([{
+            "Message": user_input,
+            "Category": prediction,
+            "Sentiment": sentiment_label,
+            "Profanity": "Yes" if profanity_flag else "No",
+            "Spam": "Yes" if spam_flag else "No",
+            "Violations": st.session_state.user_violations
+        }])
+
+        if os.path.exists("chat_logs.csv"):
+            log_entry.to_csv("chat_logs.csv", mode='a', header=False, index=False)
+        else:
+            log_entry.to_csv("chat_logs.csv", index=False)
 
         st.dataframe(log_entry)
-    else
-        if violation_detected
-            st.warning(" Please revise your message to follow community guidelines.")
-        else
-            st.success(" Message is likely safe.")
+    else:
+        if violation_detected:
+            st.warning("❗Please revise your message to follow community guidelines.")
+        else:
+            st.success("✅ Message is likely safe.")
