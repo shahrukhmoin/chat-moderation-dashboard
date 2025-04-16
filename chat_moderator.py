@@ -84,7 +84,7 @@ st.markdown(f"###  Violations Count: `{st.session_state.user_violations}`")
 
 
 # Auto-block if violations exceed limit
-if st.session_state.user_violations == 3
+if st.session_state.user_violations == 3:
     st.session_state.user_blocked = True
     st.error("You have been temporarily blocked due to repeated violations.")
 
