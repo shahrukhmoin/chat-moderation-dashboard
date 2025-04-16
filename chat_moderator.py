@@ -53,11 +53,12 @@ def load_model():
     model.fit(X, y)
     return model, vectorizer
 
-def contains_profanity(text)
+def contains_profanity(text):
     text_lower = text.lower()
     return any(bad_word in text_lower for bad_word in PROFANITY_LIST)
 
-def is_spam(text)
+
+def is_spam(text):
     current_time = time.time()
     st.session_state.message_history = [msg for msg in st.session_state.message_history if current_time - msg['time']  30]
     recent_count = sum(1 for msg in st.session_state.message_history if msg['text'] == text)
