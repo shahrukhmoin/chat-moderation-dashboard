@@ -74,7 +74,7 @@ model, vectorizer = load_model()
 
 # GUI
 st.title( "AI Chat Moderator for Schools")
-st.write(Detect cyberbullying, threats, profanity, spam, and sentiment in real-time student chat)
+st.write("Detect cyberbullying, threats, profanity, spam, and sentiment in real-time student chat")
 
 user_role = st.selectbox(Select your role, [Student, Admin])
 user_input = st.text_area(Enter chat message)
