@@ -52,6 +52,7 @@ def load_model():
     model = MultinomialNB()
     model.fit(X, y)
     return model, vectorizer
+  
 
 def contains_profanity(text):
     text_lower = text.lower()
@@ -60,10 +61,14 @@ def contains_profanity(text):
 
 def is_spam(text):
     current_time = time.time()
-    st.session_state.message_history = [msg for msg in st.session_state.message_history if current_time - msg['time']  30]
+    st.session_state.message_history = [
+        msg for msg in st.session_state.message_history 
+        if current_time - msg['time'] < 30
+    ]
     recent_count = sum(1 for msg in st.session_state.message_history if msg['text'] == text)
-    st.session_state.message_history.append({text text, time current_time})
-    return recent_count = 2
+    st.session_state.message_history.append({"text": text, "time": current_time})
+    return recent_count >= 2
+
 
 model, vectorizer = load_model()
 
