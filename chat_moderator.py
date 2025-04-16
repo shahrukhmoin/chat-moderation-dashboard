@@ -76,8 +76,8 @@ model, vectorizer = load_model()
 st.title( "AI Chat Moderator for Schools")
 st.write("Detect cyberbullying, threats, profanity, spam, and sentiment in real-time student chat")
 
-user_role = st.selectbox(Select your role, [Student, Admin])
-user_input = st.text_area(Enter chat message)
+user_role = st.selectbox("Select your role", [Student, Admin])
+user_input = st.text_area("Enter chat message")
 
 # Show badge for violations
 st.markdown(f###  Violations Count `{st.session_state.user_violations}`)
@@ -85,7 +85,7 @@ st.markdown(f###  Violations Count `{st.session_state.user_violations}`)
 # Auto-block if violations exceed limit
 if st.session_state.user_violations = 3
     st.session_state.user_blocked = True
-    st.error(You have been temporarily blocked due to repeated violations.)
+    st.error("You have been temporarily blocked due to repeated violations.")
 
 if st.button(Analyze Message) and user_input and not st.session_state.user_blocked
     vect_input = vectorizer.transform([user_input])
@@ -138,6 +138,6 @@ if st.button(Analyze Message) and user_input and not st.session_state.user_block
         st.dataframe(log_entry)
     else
         if violation_detected
-            st.warning( Please revise your message to follow community guidelines.)
+            st.warning(" Please revise your message to follow community guidelines.")
         else
-            st.success( Message is likely safe.)
+            st.success(" Message is likely safe.")
