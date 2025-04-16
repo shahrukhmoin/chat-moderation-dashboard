@@ -73,7 +73,7 @@ def is_spam(text):
 model, vectorizer = load_model()
 
 # GUI
-st.title( AI Chat Moderator for Schools)
+st.title( "AI Chat Moderator for Schools")
 st.write(Detect cyberbullying, threats, profanity, spam, and sentiment in real-time student chat)
 
 user_role = st.selectbox(Select your role, [Student, Admin])
